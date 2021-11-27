@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { getAll, getById, createNewCamp, updateCamp } = require("../controllers/app");
+const { getAll, getById, createNewCamp, updateCamp, deleteCamp } = require("../controllers/app");
 
 router.get("/", async (req, res) => {
 	const campgrounds = await getAll();
@@ -9,9 +9,11 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-	const { title, location } = req.body.campground;
-	const isDataSaved = await createNewCamp({ title, location });
-	if (isDataSaved) res.redirect(`/campgrounds/${isDataSaved._id}`);
+	console.log("fired");
+	const camp = req.body.campground;
+	console.log(camp);
+	const isCampgroundSaved = await createNewCamp({ ...camp });
+	if (isCampgroundSaved) res.redirect(`/campgrounds/${isCampgroundSaved._id}`);
 	else res.send("404");
 });
 
@@ -31,20 +33,21 @@ router.get("/:id/edit", async (req, res) => {
 	res.render("campgrounds/edit", { campground });
 });
 
-router.patch("/:id/edit", async (req, res) => {
-	const { title, location } = req.body.campground;
+router.delete("/:id/delete", async (req, res) => {
+	console.log("delete route");
 	const { id } = req.params;
-	const campground = await getById(id);
-	const isSuccess = await updateCamp({ title, location }, campground);
-	res.redirect(`/campgrounds/${id}`);
+	const campground = await deleteCamp(id);
+	if (campground) res.redirect("/campgrounds");
+	else res.send("404");
 });
 
-router.delete("/delete/:id", async (req, res) => {
+router.patch("/:id/edit", async (req, res) => {
+	const camp = req.body.campground;
+	console.log("patch");
 	const { id } = req.params;
-	const campground = await getById(id);
-	console.log(campground);
-	await campground.remove();
-	res.redirect("/campgrounds");
+	const isCampUpdated = await updateCamp(camp, id);
+	if (isCampUpdated) res.redirect(`/campgrounds/${id}`);
+	else res.redirect(`/campgrounds/${id}`);
 });
 
 module.exports.router = router;
