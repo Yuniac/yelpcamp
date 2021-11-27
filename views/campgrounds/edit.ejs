@@ -1,14 +1,32 @@
 <%= layout("./layout/boilerplate.ejs") %>
 
 <form action="/campgrounds/<%= campground._id %>/edit?_method=PATCH" method="POST">
-	<div>
-		<label for="campground">campground</label>
-		<input type="text" id="campground" name="campground[title]" value="<%= campground.title %> " />
-	</div>
-	<br />
-	<div>
-		<label for="location">location</label>
-		<input type="text" id="location" name="campground[location]" value="<%= campground.location %> " />
-	</div>
-	<button type="submit">Save</button>
+		<div class="mb-3">
+			<label class="form-label" for="campground">Name:</label>
+			<input class="form-control" type="text" id="campground" name="campground[title]" value="<%= campground.title %>" />
+		</div>
+		<div class="mb-3">
+			<label class="form-label" for="location">Location:</label>
+			<input class="form-control" type="text" id="location" name="campground[location]"  value="<%= campground.location %>"/>
+		</div>
+		<div class="mb-3">
+			<label class="form-label" for="image" class="d-block my-4">Image Url:</label>
+			<input class="form-control" type="text" id="image" name="campground[image]" value="<%= campground.image %>" />
+		</div>
+		<div class="mb-3">
+			<label class="form-label" for="description">Description:</label>
+			<textarea class="form-control" type="text" id="description" name="campground[description]"><%=campground.description%></textarea>
+		</div>
+		<div class="mb-3">
+			<label for="price">Price:</label>
+			<div class="input-group my-3">
+				<span class="input-group-text">$</span>
+				<input type="text" class="form-control" id="price" name="campground[price]" placeholder="0 $" value="<%= campground.price %>"/>
+			</div>
+		</div>
+		<div class="my-3">
+		<button type="submit" class="btn btn-success mt-2">Save</button>
+		<a href="/campgrounds/<%= campground._id %>" class="btn btn-info mt-2">Cancel</a>
+		</div>
+	</form>
 </form>

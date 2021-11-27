@@ -1,8 +1,22 @@
 <!-- layout link is relative to the path of the views dir -->
 <%= layout("./layout/boilerplate.ejs") %>
 <h1 class="center notice">All current campgrounds</h1>
-<ul>
-	<% for( let i = 0; i < campgrounds.length; i++ ) { %>
-	<li><a href="/campgrounds/<%= campgrounds[i]._id %>"><%= campgrounds[i].title %></a></li>
-	<% } %>
-</ul>
+<% for( let i = 0; i < campgrounds.length; i++ ) { %>
+<div class="card mb-3">
+	<div class="row">
+		<div class="col-md-4">
+			<img class="img-fluid" src="<%= campgrounds[i].image %>" alt="<%= campgrounds[i].title %>" />
+		</div>
+		<div class="card-body col-md-8">
+			<h3 class="card-title"><%= campgrounds[i].title %></h3>
+			<p class="card-text"><%= campgrounds[i].description %></p>
+			<ul class="mt-4">
+				<h4 class="success">Details:</h4>
+				<li>Location: <%= campgrounds[i].location %></li>
+				<li>Price: <%= campgrounds[i].price %></li>
+			</ul>
+			<a href="/campgrounds/<%= campgrounds[i]._id %>" class="btn btn-primary">View</a>
+		</div>
+	</div>
+</div>
+<% } %>

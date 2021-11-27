@@ -1,16 +1,35 @@
 <%= layout("./layout/boilerplate.ejs") %>
 
-<form action="/campgrounds" method="POST">
-	<div>
-		<label for="campground">campground</label>
-		<input type="text" id="campground" name="campground[title]" />
+<div class="row">
+	<h1 class="text-center">New Campground</h1>
+	<div class="col-md-6 offset-3">
+		<form action="/campgrounds" method="POST">
+			<div class="mb-3">
+				<label class="form-label" for="campground">Name:</label>
+				<input class="form-control" type="text" id="campground" name="campground[title]" />
+			</div>
+			<div class="mb-3">
+				<label class="form-label" for="location">Location:</label>
+				<input class="form-control" type="text" id="location" name="campground[location]" />
+			</div>
+			<div class="mb-3">
+				<label class="form-label" for="image">Image Url:</label>
+				<input class="form-control" type="text" id="image" name="campground[image]" />
+			</div>
+			<div class="mb-3">
+				<label class="form-label" for="description">Description:</label>
+				<textarea class="form-control" type="text" id="description" name="campground[description]"></textarea>
+			</div>
+			<div class="mb-3">
+				<label for="price">Price:</label>
+				<div class="input-group my-3">
+					<span class="input-group-text">$</span>
+					<input type="text" class="form-control" id="price" name="campground[price]" placeholder="0 $" />
+				</div>
+			</div>
+			<button type="submit" class="btn btn-success mt-2">Save</button>
+		</form>
 	</div>
-	<br />
-	<div>
-		<label for="location">location</label>
-		<input type="text" id="location" name="campground[location]" />
-	</div>
-	<button type="submit">Save</button>
-</form>
+</div>
 
-<a href="/campgrounds">Go back</a>
+<a href="/campgrounds" class="btn btn-primary mx-auto d-block mt-3 w-25">Go back</a>
