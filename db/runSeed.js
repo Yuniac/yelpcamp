@@ -11,13 +11,21 @@ const seedDB = async () => {
 		const second = Math.floor(Math.random() * descriptors.length);
 		return places[first] + " " + descriptors[second];
 	};
+	const makePrice = () => {
+		const min = 10;
+		const max = 100;
+		const price = Math.floor(Math.random() * (max - min + 1) + min);
+		return price;
+	};
 	for (let i = 0; i < 50; i++) {
 		const randmoNumber = Math.floor(Math.random() * seed.length);
 		const camp = new Campground({
 			title: makeTitle(places, descriptors),
-			price: 25,
-			description: `Population: ${seed[randmoNumber].population}`,
+			price: makePrice(),
+			description:
+				"Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, cupiditate adipisci. Excepturi quaerat repellendus asperiores eius odit est quam exercitationem ut, animi optio quia! Est soluta qui commodi ullam eligendi.",
 			location: `${seed[randmoNumber].state}, ${seed[randmoNumber].city}`,
+			image: "https://source.unsplash.com/collection/483251",
 		});
 		await camp.save();
 	}
