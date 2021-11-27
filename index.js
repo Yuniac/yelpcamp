@@ -16,15 +16,12 @@ app.set("views", path.join(__dirname, "views"));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
-// app.use("/campground", (req, res, next) => {
-// 	console.log("Request");
-// 	next();
-// });
+
 app.get("/", (req, res) => {
 	res.render("home");
 });
 app.use("/campgrounds", website);
-// app.use((req, res) => res.send("404"));
+
 app.listen(5000, () => {
 	console.log("running at port 5000");
 });
