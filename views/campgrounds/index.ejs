@@ -1,0 +1,8 @@
+<!-- layout link is relative to the path of the views dir -->
+<%= layout("./layout/boilerplate.ejs") %>
+<h1 class="center notice">All current campgrounds</h1>
+<ul>
+	<% for( let i = 0; i < campgrounds.length; i++ ) { %>
+	<li><a href="/campgrounds/<%= campgrounds[i]._id %>"><%= campgrounds[i].title %></a></li>
+	<% } %>
+</ul>

@@ -1,0 +1,16 @@
+<%= layout("./layout/boilerplate.ejs") %>
+
+<form action="/campgrounds" method="POST">
+	<div>
+		<label for="campground">campground</label>
+		<input type="text" id="campground" name="campground[title]" />
+	</div>
+	<br />
+	<div>
+		<label for="location">location</label>
+		<input type="text" id="location" name="campground[location]" />
+	</div>
+	<button type="submit">Save</button>
+</form>
+
+<a href="/campgrounds">Go back</a>
