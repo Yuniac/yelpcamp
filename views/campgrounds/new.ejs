@@ -1,35 +1,39 @@
-<%= layout("./layout/boilerplate.ejs") %>
+<% layout("./layout/boilerplate.ejs") %>
 
 <div class="row">
 	<h1 class="text-center">New Campground</h1>
 	<div class="col-md-6 offset-3">
-		<form action="/campgrounds" method="POST">
+		<form action="/campgrounds" method="POST" class="needs-validation" novalidate>
 			<div class="mb-3">
 				<label class="form-label" for="campground">Name:</label>
-				<input class="form-control" type="text" id="campground" name="campground[title]" />
+				<input class="form-control" type="text" id="campground" name="campground[title]" required />
+				<div class="invalid-feedback">Please provide a name for your campground.</div>
 			</div>
 			<div class="mb-3">
 				<label class="form-label" for="location">Location:</label>
-				<input class="form-control" type="text" id="location" name="campground[location]" />
+				<input class="form-control" type="text" id="location" name="campground[location]" required />
+				<div class="invalid-feedback">Please provide a valid city.</div>
 			</div>
 			<div class="mb-3">
 				<label class="form-label" for="image">Image Url:</label>
-				<input class="form-control" type="text" id="image" name="campground[image]" />
+				<input class="form-control" type="text" id="image" name="campground[image]" required />
+				<div class="invalid-feedback">Please provide an image for your campground.</div>
 			</div>
 			<div class="mb-3">
 				<label class="form-label" for="description">Description:</label>
-				<textarea class="form-control" type="text" id="description" name="campground[description]"></textarea>
+				<textarea class="form-control" type="text" id="description" name="campground[description]" required></textarea>
+				<div class="invalid-feedback">Please provide a description for your campground.</div>
 			</div>
 			<div class="mb-3">
 				<label for="price">Price:</label>
 				<div class="input-group my-3">
 					<span class="input-group-text">$</span>
-					<input type="text" class="form-control" id="price" name="campground[price]" placeholder="0 $" />
+					<input type="text" class="form-control" id="price" name="campground[price]" placeholder="0 $" required />
+					<div class="invalid-feedback">Please provide a price per night for your campground.</div>
 				</div>
 			</div>
 			<button type="submit" class="btn btn-success mt-2">Save</button>
+			<a href="/campgrounds" class="btn btn-primary mx-auto d-block mt-3 w-25">Go back</a>
 		</form>
 	</div>
 </div>
-
-<a href="/campgrounds" class="btn btn-primary mx-auto d-block mt-3 w-25">Go back</a>
