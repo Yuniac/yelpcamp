@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const { getAll, getById, createNewCamp, updateCamp, deleteCamp } = require("../controllers/app");
+const { isFormValidBackend } = require("../helpers/helpers");
 
 router.get("/", async (req, res, next) => {
 	try {
@@ -11,14 +12,13 @@ router.get("/", async (req, res, next) => {
 		next(err);
 	}
 });
-
-router.post("/", async (req, res, next) => {
+router.post("/", isFormValidBackend, async (req, res, next) => {
 	try {
-		const camp = req.body.campground;
-		const isCampgroundSaved = await createNewCamp({ ...camp });
-		if (isCampgroundSaved) res.redirect(`/campgrounds/${isCampgroundSaved._id}`);
+		const camp = req.newCamp;
+		const isCampSaved = await createNewCamp({ ...camp });
+		if (isCampSaved) res.redirect(`/campgrounds/${isCampSaved._id.toString()}`);
 	} catch (err) {
-		err.message = "Creating a new campground has failed... please check your input";
+		if (!err.message) "Creating a new campground has failed... please check your input";
 		next(err);
 	}
 });
@@ -33,7 +33,7 @@ router.get("/:id", async (req, res, next) => {
 		const campground = await getById(id);
 		res.render("campgrounds/show", { campground });
 	} catch (err) {
-		err.message = "No campground exist with that ID.";
+		if (!err.message) "No campground exist with that ID.";
 		err.status = 404;
 		next(err);
 	}
@@ -65,9 +65,9 @@ router.delete("/:id/delete", async (req, res, next) => {
 	}
 });
 
-router.patch("/:id/edit", async (req, res, next) => {
+router.patch("/:id/edit", isFormValidBackend, async (req, res, next) => {
 	try {
-		const camp = req.body.campground;
+		const camp = req.newCamp;
 		const { id } = req.params;
 		const isCampUpdated = await updateCamp(camp, id);
 		if (isCampUpdated) res.redirect(`/campgrounds/${id}`);

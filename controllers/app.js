@@ -1,17 +1,18 @@
 const { Campground } = require("../model/schema");
+
 const getAll = async () => {
 	const result = await Campground.find();
 	return result;
 };
+
 const getById = async (id) => {
-	const result = await Campground.findById(id);
+	const result = await Campground.findOne({ _id: id });
 	return result;
 };
+
 const createNewCamp = async (camp) => {
-	const { title } = camp;
 	const newCamp = new Campground(camp);
-	await newCamp.save({ validateBeforeSave: true });
-	const isSuccess = Campground.exists({ title: title });
+	const isSuccess = await newCamp.save({ validateBeforeSave: true });
 	if (isSuccess) return newCamp;
 	return false;
 };
