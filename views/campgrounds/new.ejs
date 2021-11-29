@@ -28,8 +28,8 @@
 				<label for="price">Price:</label>
 				<div class="input-group my-3">
 					<span class="input-group-text">$</span>
-					<input type="text" class="form-control" id="price" name="campground[price]" placeholder="0 $" required />
-					<div class="invalid-feedback">Please provide a price per night for your campground.</div>
+					<input type="number" class="form-control" id="price" name="campground[price]" placeholder="0 $" required />
+					<div class="invalid-feedback price-feedback">Price per night must be a number.</div>
 				</div>
 			</div>
 			<button type="submit" class="btn btn-success mt-2">Save</button>

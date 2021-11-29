@@ -1,0 +1,12 @@
+.card-small {
+	max-width: 450px;
+	margin: 0 auto;
+}
+
+.card img {
+	max-width: 427px;
+}
+
+.delete-form {
+	display: inline-block;
+}
