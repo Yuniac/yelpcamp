@@ -8,9 +8,10 @@ mongoose.connect("mongodb://localhost:27017/yelp-camp");
 
 const ejsMate = require("ejs-mate");
 
-const ExpressError = require("./helpers/expressError");
-
 const { router: website } = require("./router/website");
+
+app.use("/", express.static(path.join(__dirname, "public")));
+app.use("/campgrounds", express.static(path.join(__dirname, "public")));
 
 app.set("view engine", "ejs");
 app.engine("ejs", ejsMate);
@@ -24,10 +25,16 @@ app.get("/", (req, res) => {
 });
 app.use("/campgrounds", website);
 
+app.all("*", (req, res) => {
+	res.status(404).render("campgrounds/error", {
+		message: "Page not found",
+		description: "Something went wrong, please see the message below:",
+	});
+});
 // this catches all the errors and thanks to our custom errors handling class, we send responses accordingly
 app.use("/", (err, req, res, next) => {
 	const { message = "Something Went Wrong...", status = 500 } = err;
-	res.status(status).send(message);
+	res.status(status).render("campgrounds/error", { message, description: "Something went wrong, please see the message below:" });
 });
 
 // // error handler has to be at the end
