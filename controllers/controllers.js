@@ -11,6 +11,11 @@ const getById = async (id) => {
 	return result;
 };
 
+const getByIdAndPopulate = async (id, field) => {
+	const result = await Campground.findOne({ _id: id }).populate(field);
+	return result;
+};
+
 const createNewCamp = async (camp) => {
 	const newCamp = new Campground(camp);
 	const isSuccess = await newCamp.save({ validateBeforeSave: true });
@@ -31,11 +36,16 @@ const deleteCamp = async (id) => {
 };
 
 const createNewReviewForACamp = async (review, campgroundID) => {
+	// create a review and save it
 	const newReview = await new Review(review);
+	await newReview.save({ validateBeforeSave: true });
+
+	// find the camp to review, save the review on it
 	const campToReview = await getById(campgroundID);
 	const isSaved = campToReview.reviews.push(newReview);
 	await campToReview.save({ validateBeforeSave: true });
+
 	if (isSaved) return true;
 	return false;
 };
-module.exports = { getAll, getById, createNewCamp, updateCamp, deleteCamp, createNewReviewForACamp };
+module.exports = { getAll, getById, getByIdAndPopulate, createNewCamp, updateCamp, deleteCamp, createNewReviewForACamp };
