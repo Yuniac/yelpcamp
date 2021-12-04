@@ -24,7 +24,7 @@ const updateCamp = async (updatedCampData, exisitingCampID) => {
 };
 
 const deleteCamp = async (id) => {
-	const isDeleted = await Campground.deleteOne({ id: id });
+	const isDeleted = await Campground.findByIdAndDelete(id);
 	if (isDeleted) return true;
 	return false;
 };
