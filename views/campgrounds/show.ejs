@@ -17,3 +17,26 @@
 	</div>
 	<a href="/campgrounds" class="btn btn-primary">Go Home</a>
 </div>
+
+<% if (campground.reviews.length) { %>
+<hr />
+<div>
+	<% for (let review of campground.reviews) { %>
+	<li><%= review.body %> - I rate this campground a rating of: <%= review.rating %> stars</li>
+	<% } %>
+</div>
+<% } %>
+<hr />
+<div class="card-small mt-3">
+	<form class="mb-3" action="/campgrounds/<%= campground._id %>/review" method="POST">
+		<div>
+			<label for="review[rating]" class="form-lable">Rating:</label>
+			<input type="range" min="1" max="5" step="1" id="review[rating]" class="form-range" name="review[rating]" />
+		</div>
+		<div class="my-1">
+			<label for="review[body]" class="form-lable">Review:</label>
+			<textarea id="review[body]" name="review[body]" class="form-control" cols="30" rows="3"></textarea>
+		</div>
+		<button>Add a review</button>
+	</form>
+</div>
