@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { getAll, getById, createNewCamp, updateCamp, deleteCamp } = require("../controllers/app");
+const { getAll, getById, createNewCamp, updateCamp, deleteCamp, createNewReviewForACamp } = require("../controllers/controllers");
 const { isFormValidBackend } = require("../helpers/helpers");
 
 // show all campgrounds
@@ -30,6 +30,10 @@ router.post("/", isFormValidBackend, async (req, res, next) => {
 		next(err);
 	}
 });
+
+/*
+ :id = camp._id
+*/
 
 // show a campground's page
 router.get("/:id", async (req, res, next) => {
@@ -85,6 +89,24 @@ router.patch("/:id/edit", isFormValidBackend, async (req, res, next) => {
 	} catch (err) {
 		err.message = "Editing the campground has failed... please check your input or try again later";
 		err.status = 400;
+		next(err);
+	}
+});
+
+// add a camp review
+router.post("/:id/review", async (req, res, next) => {
+	try {
+		const { id } = req.params;
+		const { review } = req.body;
+		const isReviewSaved = await createNewReviewForACamp(review, id);
+		if (isReviewSaved) {
+			res.redirect(`/campgrounds/${id}`);
+		}
+	} catch (err) {
+		if (!err.message) {
+			err.message = "Something went wrong... please try again later";
+			res.status(500);
+		}
 		next(err);
 	}
 });
