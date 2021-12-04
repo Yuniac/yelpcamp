@@ -27,10 +27,11 @@ app.use("/campgrounds", websiteRouter);
 
 app.all("*", (req, res) => {
 	res.status(404).render("campgrounds/error", {
-		message: "Page not found",
+		message: "The page you are trying to access was not found",
 		description: "Something went wrong, please see the message below:",
 	});
 });
+
 // this catches all the errors and thanks to our custom errors handling class, we send responses accordingly
 app.use("/", (err, req, res, next) => {
 	console.log(err);
