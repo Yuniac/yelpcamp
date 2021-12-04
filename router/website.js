@@ -1,8 +1,17 @@
 const express = require("express");
 const router = express.Router();
 
-const { getAll, getById, createNewCamp, updateCamp, deleteCamp, createNewReviewForACamp } = require("../controllers/controllers");
-const { isFormValidBackend } = require("../helpers/helpers");
+const {
+	getAll,
+	getById,
+	getByIdAndPopulate,
+	createNewCamp,
+	updateCamp,
+	deleteCamp,
+	createNewReviewForACamp,
+} = require("../controllers/controllers");
+
+const { isFormValidBackend, isReviewValidBackend } = require("../helpers/helpers");
 
 // show all campgrounds
 router.get("/", async (req, res, next) => {
@@ -39,7 +48,7 @@ router.post("/", isFormValidBackend, async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
 	try {
 		const { id } = req.params;
-		const campground = await getById(id);
+		const campground = await getByIdAndPopulate(id, "reviews");
 		res.render("campgrounds/show", { campground });
 	} catch (err) {
 		if (!err.message) {
@@ -94,11 +103,11 @@ router.patch("/:id/edit", isFormValidBackend, async (req, res, next) => {
 });
 
 // add a camp review
-router.post("/:id/review", async (req, res, next) => {
+router.post("/:id/review", isReviewValidBackend, async (req, res, next) => {
 	try {
 		const { id } = req.params;
-		const { review } = req.body;
-		const isReviewSaved = await createNewReviewForACamp(review, id);
+		const { newReview } = req.body;
+		const isReviewSaved = await createNewReviewForACamp(newReview, id);
 		if (isReviewSaved) {
 			res.redirect(`/campgrounds/${id}`);
 		}

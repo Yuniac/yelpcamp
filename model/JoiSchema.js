@@ -1,6 +1,6 @@
 const Joi = require("joi");
 
-const joiSchema = Joi.object({
+const campGroundJOISchema = Joi.object({
 	title: Joi.string().required().trim().error(new Error("Campground title can't be empty")),
 	price: Joi.number().required().integer().min(0).error(new Error("Campground price must be a number greater than 0")),
 	description: Joi.string().required().error(new Error("Campground description is needed")),
@@ -11,4 +11,10 @@ const joiSchema = Joi.object({
 		.error(new Error("Please provide a valid image link")),
 });
 
-module.exports.joiSchema = joiSchema;
+const reviewsJOISchema = Joi.object({
+	body: Joi.string().required().error(new Error("Review can't be empty")),
+	rating: Joi.number().min(1).max(5).error(new Error("Rating is required and it has to be within range (1-5 stars)")),
+});
+
+module.exports.campGroundJOISchema = campGroundJOISchema;
+module.exports.reviewsJOISchema = reviewsJOISchema;
