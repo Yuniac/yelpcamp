@@ -1,4 +1,5 @@
 const { Campground } = require("../model/schema");
+const { Review } = require("../model/ReviewsSchema");
 
 const getAll = async () => {
 	const result = await Campground.find();
@@ -28,4 +29,13 @@ const deleteCamp = async (id) => {
 	if (isDeleted) return true;
 	return false;
 };
-module.exports = { getAll, getById, createNewCamp, updateCamp, deleteCamp };
+
+const createNewReviewForACamp = async (review, campgroundID) => {
+	const newReview = await new Review(review);
+	const campToReview = await getById(campgroundID);
+	const isSaved = campToReview.reviews.push(newReview);
+	await campToReview.save({ validateBeforeSave: true });
+	if (isSaved) return true;
+	return false;
+};
+module.exports = { getAll, getById, createNewCamp, updateCamp, deleteCamp, createNewReviewForACamp };
