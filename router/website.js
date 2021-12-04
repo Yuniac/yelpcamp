@@ -12,6 +12,7 @@ const {
 } = require("../controllers/controllers");
 
 const { isFormValidBackend, isReviewValidBackend } = require("../helpers/helpers");
+const { Campground, Review } = require("../model/ReviewsSchema");
 
 // show all campgrounds
 router.get("/", async (req, res, next) => {
@@ -135,6 +136,14 @@ router.post("/:id/review", isReviewValidBackend, async (req, res, next) => {
 		}
 		next(err);
 	}
+});
+
+// delete a review
+router.delete("/:id/review/:review_id/delete", async (req, res, next) => {
+	const { id, review_id } = req.params;
+	await Review.findByIdAndDelete(review_id);
+	await Campground.findByIdAndUpdate(id, { $pull: { reviews: review_id } });
+	res.redirect(`/campgrounds/${id}`);
 });
 
 module.exports.router = router;
