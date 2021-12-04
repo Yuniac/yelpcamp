@@ -29,7 +29,6 @@
 				// const imgRegex = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
 				const numbersRegex = /^[1-9]+$/;
 				const { title, location, img, description, price } = rules;
-				debugger;
 				if (title.length && location.length && img.length && description.length && numbersRegex.test(parseInt(price))) {
 					return true;
 				}

@@ -12,6 +12,7 @@ router.get("/", async (req, res, next) => {
 		next(err);
 	}
 });
+
 router.post("/", isFormValidBackend, async (req, res, next) => {
 	try {
 		const camp = req.newCamp;
