@@ -10,8 +10,7 @@ const ejsMate = require("ejs-mate");
 
 const { router: websiteRouter } = require("./router/website");
 
-app.use("/", express.static(path.join(__dirname, "public")));
-app.use("/campgrounds", express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public")));
 
 app.set("view engine", "ejs");
 app.engine("ejs", ejsMate);
@@ -27,16 +26,16 @@ app.use("/campgrounds", websiteRouter);
 
 app.all("*", (req, res) => {
 	res.status(404).render("campgrounds/error", {
-		message: "The page you are trying to access was not found",
 		description: "Something went wrong, please see the message below:",
+		message: "The page you are trying to access was not found",
 	});
 });
 
 // this catches all the errors and thanks to our custom errors handling class, we send responses accordingly
 app.use("/", (err, req, res, next) => {
-	console.log(err);
-	const { message = "Something Went Wrong...", status = 500 } = err;
-	res.status(status).render("campgrounds/error", { message, description: "Something went wrong, please see the message below:" });
+	console.log(err.refer);
+	const { message = "Something Went Wrong...", status = 500, refer = "/campgrounds" } = err;
+	res.status(status).render("campgrounds/error", { message, description: "Something went wrong, please see the message below:", refer });
 });
 
 // // error handler has to be at the end

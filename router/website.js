@@ -19,6 +19,10 @@ router.get("/", async (req, res, next) => {
 		const campgrounds = await getAll();
 		res.render("campgrounds/index", { campgrounds });
 	} catch (err) {
+		if (!err.message) {
+			err.message = "Something went wrong, we can't access the campgrounds at the moment... please try again later";
+			err.status = 500;
+		}
 		next(err);
 	}
 });
@@ -35,7 +39,11 @@ router.post("/", isFormValidBackend, async (req, res, next) => {
 		const isCampSaved = await createNewCamp({ ...camp });
 		if (isCampSaved) res.redirect(`/campgrounds/${isCampSaved._id.toString()}`);
 	} catch (err) {
-		if (!err.message) "Creating a new campground has failed... please check your input";
+		if (!err.message) {
+			err.message = "Creating a new campground has failed... please check your input";
+			err.status = 401;
+			err.refer = "/campgrounds/new";
+		}
 		next(err);
 	}
 });
@@ -54,6 +62,7 @@ router.get("/:id", async (req, res, next) => {
 		if (!err.message) {
 			err.message = "No campground exist with that ID.";
 			err.status = 404;
+			err.refer = "/campgrounds";
 		}
 		next(err);
 	}
@@ -70,6 +79,11 @@ router.get("/:id/edit", async (req, res, next) => {
 		// else next(new ExpressError("Prodcut not found", "404"));
 		// up here we can see how throw ExpressError would work in an async function, just need to pass it in next() instead of throwing it on its own, this way, it will be caught by our app.use(err, req, res, next) error handler
 	} catch (err) {
+		if (!err.message) {
+			err.message = "Editing the campground has failed, make sure you have the right permissions";
+			err.status = 401;
+			err.refer = `/campgrounds/${id}`;
+		}
 		next(err);
 	}
 });
@@ -83,6 +97,7 @@ router.delete("/:id/delete", async (req, res, next) => {
 	} catch (err) {
 		err.message = "Deleting the campground has failed... please check you have the right permissions or try again later.";
 		err.status = 401;
+		err.refer = `/campgrounds/${id}`;
 		next(err);
 	}
 });
@@ -98,11 +113,12 @@ router.patch("/:id/edit", isFormValidBackend, async (req, res, next) => {
 	} catch (err) {
 		err.message = "Editing the campground has failed... please check your input or try again later";
 		err.status = 400;
+		err.refer = `/campgrounds/${id}`;
 		next(err);
 	}
 });
 
-// add a camp review
+// add a camp review [POST]
 router.post("/:id/review", isReviewValidBackend, async (req, res, next) => {
 	try {
 		const { id } = req.params;
@@ -114,7 +130,8 @@ router.post("/:id/review", isReviewValidBackend, async (req, res, next) => {
 	} catch (err) {
 		if (!err.message) {
 			err.message = "Something went wrong... please try again later";
-			res.status(500);
+			err.status = 500;
+			err.refer = `/campgrounds/${id}`;
 		}
 		next(err);
 	}

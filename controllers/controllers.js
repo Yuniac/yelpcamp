@@ -36,15 +36,15 @@ const deleteCamp = async (id) => {
 };
 
 const createNewReviewForACamp = async (review, campgroundID) => {
-	// create a review and save it
+	// create a review
 	const newReview = await new Review(review);
-	await newReview.save({ validateBeforeSave: true });
 
 	// find the camp to review, save the review on it
 	const campToReview = await getById(campgroundID);
 	const isSaved = campToReview.reviews.push(newReview);
-	await campToReview.save({ validateBeforeSave: true });
 
+	// save both the camp and the review
+	await Promise.all[(newReview.save({ validateBeforeSave: true }), campToReview.save({ validateBeforeSave: true }))];
 	if (isSaved) return true;
 	return false;
 };

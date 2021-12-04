@@ -17,20 +17,30 @@ const isFormValidBackend = (req, res, next) => {
 		req.newCamp = campground;
 		next();
 	} else {
-		next(new Error(error));
+		const err = new Error();
+		err.message =
+			error ||
+			"Something went wrong... please check the information you entered an that you have permissions to add new campgrounds.";
+		err.status = 401;
+		err.refer = `/campgrounds/new`;
+		next(err);
 	}
 };
 
 const isReviewValidBackend = (req, res, next) => {
+	const { id } = req.params;
 	const review = req.body.review;
 	const isValidReview = reviewsJOISchema.validate(review);
-	console.log(isValidReview);
 	const { error } = isValidReview;
 	if (!error) {
 		req.body.newReview = review;
 		next();
 	} else {
-		next(new Error(error));
+		const err = new Error();
+		err.message = error || "Something went wrong... please make sure your review is valid";
+		err.status = 401;
+		err.refer = `/campgrounds/${id}`;
+		next(err);
 	}
 };
 
