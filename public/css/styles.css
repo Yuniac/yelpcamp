@@ -1,12 +1,16 @@
 .card-small {
 	max-width: 450px;
-	margin: 0 auto;
 }
 
 .card img {
-	max-width: 427px;
+	width: 100%;
 }
 
 .delete-form {
 	display: inline-block;
+}
+
+.go-home-button {
+	width: 8rem;
+	margin: 0 auto;
 }

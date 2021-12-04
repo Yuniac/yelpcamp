@@ -33,7 +33,6 @@ app.all("*", (req, res) => {
 
 // this catches all the errors and thanks to our custom errors handling class, we send responses accordingly
 app.use("/", (err, req, res, next) => {
-	console.log(err.refer);
 	const { message = "Something Went Wrong...", status = 500, refer = "/campgrounds" } = err;
 	res.status(status).render("campgrounds/error", { message, description: "Something went wrong, please see the message below:", refer });
 });
