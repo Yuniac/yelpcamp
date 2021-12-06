@@ -1,26 +1,51 @@
 const express = require("express");
 const app = express();
 const path = require("path");
-const methodOverride = require("method-override");
 
 const mongoose = require("mongoose");
 mongoose.connect("mongodb://localhost:27017/yelp-camp");
 
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
+const flash = require("connect-flash");
+
 const ejsMate = require("ejs-mate");
+const methodOverride = require("method-override");
 
 const { router: campgroundsWebsiteRouter } = require("./router/campgrounds");
 const { router: reviewsWebsiteRouter } = require("./router/reviews");
 
+const { setupLocals } = require("./helpers/helpers");
+
+app.use(flash());
+
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use(cookieParser());
+app.use(
+	session({
+		name: "session_id_YelpCamp",
+		cookie: {
+			expires: Date.now() + 1000 * 60 * 60 * 25 * 7,
+			maxAge: 1000 * 60 * 60 * 25 * 7,
+			// TODO secure: true; right now, secure won't work on localhost;
+		},
+		secret: "temporarySecret",
+		saveUninitialized: true,
+		resave: false,
+	})
+);
 
 app.set("view engine", "ejs");
 app.engine("ejs", ejsMate);
 app.set("views", path.join(__dirname, "views"));
+app.use(setupLocals);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
 app.get("/", (req, res) => {
+	console.log(req.session);
 	res.render("home");
 });
 
