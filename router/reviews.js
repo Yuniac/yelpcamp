@@ -16,6 +16,7 @@ router.post("/:id/review", isReviewValidBackend, async (req, res, next) => {
 		const { newReview } = req.body;
 		const isReviewSaved = await createNewReviewForACamp(newReview, id);
 		if (isReviewSaved) {
+			req.flash("success", "review has been added!");
 			res.redirect(`/campgrounds/${id}`);
 		}
 	} catch (err) {
@@ -35,9 +36,12 @@ router.post("/:id/review", isReviewValidBackend, async (req, res, next) => {
 router.delete("/:id/review/:review_id/delete", async (req, res, next) => {
 	try {
 		const { id, review_id } = req.params;
-		await Review.findByIdAndDelete(review_id);
-		await Campground.findByIdAndUpdate(id, { $pull: { reviews: review_id } });
-		res.redirect(`/campgrounds/${id}`);
+		const isReviewDeleted = await Review.findByIdAndDelete(review_id);
+		const isReviewDeletedFromItsParent = await Campground.findByIdAndUpdate(id, { $pull: { reviews: review_id } });
+		if (isReviewDeleted && isReviewDeletedFromItsParent) {
+			req.flash("success", "review has been deleted");
+			res.redirect(`/campgrounds/${id}`);
+		}
 	} catch (err) {
 		if (!err.message) {
 			err.message = "Couldn't delete the review... you can only delete your own reviews";

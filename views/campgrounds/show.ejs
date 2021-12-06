@@ -1,4 +1,12 @@
 <% layout("./layout/boilerplate.ejs") %>
+<!-- success notice -->
+<% if (success && success.length) { %>
+<div class="alert alert-success alert-dismissible fade show text-center custom-alret-style" role="alert">
+	<strong><%= success %></strong>
+	<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<% } %>
+<!--  -->
 <div class="row my-2">
 	<div class="card card-small col-4 gx-3 offset-1">
 		<img src="<%= campground.image %>" class="card-img-top" alt="<%= campground.title %> image" />

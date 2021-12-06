@@ -32,7 +32,10 @@ router.post("/", isFormValidBackend, async (req, res, next) => {
 	try {
 		const camp = req.newCamp;
 		const isCampSaved = await createNewCamp({ ...camp });
-		if (isCampSaved) res.redirect(`/campgrounds/${isCampSaved._id.toString()}`);
+		if (isCampSaved) {
+			req.flash("success", "campground created successfully!");
+			res.redirect(`/campgrounds/${isCampSaved._id.toString()}`);
+		}
 	} catch (err) {
 		if (!err.message) {
 			err.message = "Creating a new campground has failed... please check your input";
@@ -90,6 +93,29 @@ router.get("/:id/edit", async (req, res, next) => {
 	}
 });
 
+// edit a campground [PATCH]
+router.patch("/:id/edit", isFormValidBackend, async (req, res, next) => {
+	try {
+		const camp = req.newCamp;
+		const { id } = req.params;
+		const isCampUpdated = await updateCamp(camp, id);
+		if (isCampUpdated) {
+			req.flash("success", "campground has been updated successfully!");
+			res.redirect(`/campgrounds/${id}`);
+		}
+	} catch (err) {
+		if (!err.message) {
+			err.message = "Editing the campground has failed... please check your input or try again later";
+			err.status = 401;
+			err.refer = `/campgrounds/${id}`;
+		} else {
+			err.status = 500;
+			err.refer = `/campgrounds/${id}`;
+		}
+		next(err);
+	}
+});
+
 // delete a campground
 router.delete("/:id/delete", async (req, res, next) => {
 	try {
@@ -100,27 +126,6 @@ router.delete("/:id/delete", async (req, res, next) => {
 		err.message = "Deleting the campground has failed... please check you have the right permissions or try again later.";
 		err.status = 401;
 		err.refer = `/campgrounds/${id}`;
-		next(err);
-	}
-});
-
-// edit a campground [PATCH]
-router.patch("/:id/edit", isFormValidBackend, async (req, res, next) => {
-	try {
-		const camp = req.newCamp;
-		const { id } = req.params;
-		const isCampUpdated = await updateCamp(camp, id);
-		if (isCampUpdated) res.redirect(`/campgrounds/${id}`);
-		else res.redirect(`/campgrounds/${id}`);
-	} catch (err) {
-		if (!err.message) {
-			err.message = "Editing the campground has failed... please check your input or try again later";
-			err.status = 401;
-			err.refer = `/campgrounds/${id}`;
-		} else {
-			err.status = 500;
-			err.refer = `/campgrounds/${id}`;
-		}
 		next(err);
 	}
 });
