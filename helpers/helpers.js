@@ -44,4 +44,10 @@ const isReviewValidBackend = (req, res, next) => {
 	}
 };
 
-module.exports = { isFormValidBackend, isReviewValidBackend };
+const setupLocals = (req, res, next) => {
+	res.locals.success = req.flash("success") || undefined;
+	res.locals.error = req.flash("error") || undefined;
+	next();
+};
+
+module.exports = { isFormValidBackend, isReviewValidBackend, setupLocals };
