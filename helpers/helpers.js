@@ -1,4 +1,4 @@
-const { campGroundJOISchema, reviewsJOISchema } = require("../model/JoiSchema");
+const { campGroundJOISchema, reviewsJOISchema } = require("../model/JoiSchemas");
 
 const isFormValid = (rules) => {
 	// const regex = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
@@ -44,5 +44,4 @@ const isReviewValidBackend = (req, res, next) => {
 	}
 };
 
-module.exports.isFormValidBackend = isFormValidBackend;
-module.exports.isReviewValidBackend = isReviewValidBackend;
+module.exports = { isFormValidBackend, isReviewValidBackend };

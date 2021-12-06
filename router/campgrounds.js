@@ -1,18 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-const {
-	getAll,
-	getById,
-	getByIdAndPopulate,
-	createNewCamp,
-	updateCamp,
-	deleteCamp,
-	createNewReviewForACamp,
-} = require("../controllers/controllers");
+const { getAll, getById, getByIdAndPopulate, createNewCamp, updateCamp, deleteCamp } = require("../controllers/controllers");
 
-const { isFormValidBackend, isReviewValidBackend } = require("../helpers/helpers");
-const { Campground, Review } = require("../model/ReviewsSchema");
+const { isFormValidBackend } = require("../helpers/helpers");
 
 // show all campgrounds
 router.get("/", async (req, res, next) => {
@@ -23,6 +14,9 @@ router.get("/", async (req, res, next) => {
 		if (!err.message) {
 			err.message = "Something went wrong, we can't access the campgrounds at the moment... please try again later";
 			err.status = 500;
+		} else {
+			err.status = 500;
+			err.refer = `/`;
 		}
 		next(err);
 	}
@@ -44,6 +38,9 @@ router.post("/", isFormValidBackend, async (req, res, next) => {
 			err.message = "Creating a new campground has failed... please check your input";
 			err.status = 401;
 			err.refer = "/campgrounds/new";
+		} else {
+			err.status = 500;
+			err.refer = "/campgrounds/new";
 		}
 		next(err);
 	}
@@ -64,6 +61,9 @@ router.get("/:id", async (req, res, next) => {
 			err.message = "No campground exist with that ID.";
 			err.status = 404;
 			err.refer = "/campgrounds";
+		} else {
+			err.status = 500;
+			err.refer = "/campgrounds/";
 		}
 		next(err);
 	}
@@ -81,7 +81,8 @@ router.get("/:id/edit", async (req, res, next) => {
 		// up here we can see how throw ExpressError would work in an async function, just need to pass it in next() instead of throwing it on its own, this way, it will be caught by our app.use(err, req, res, next) error handler
 	} catch (err) {
 		if (!err.message) {
-			err.message = "Editing the campground has failed, make sure you have the right permissions";
+			err.message =
+				"Something went wrong... please try again later or make sure you have the right permissios to edit the campgrounds";
 			err.status = 401;
 			err.refer = `/campgrounds/${id}`;
 		}
@@ -112,38 +113,16 @@ router.patch("/:id/edit", isFormValidBackend, async (req, res, next) => {
 		if (isCampUpdated) res.redirect(`/campgrounds/${id}`);
 		else res.redirect(`/campgrounds/${id}`);
 	} catch (err) {
-		err.message = "Editing the campground has failed... please check your input or try again later";
-		err.status = 400;
-		err.refer = `/campgrounds/${id}`;
-		next(err);
-	}
-});
-
-// add a camp review [POST]
-router.post("/:id/review", isReviewValidBackend, async (req, res, next) => {
-	try {
-		const { id } = req.params;
-		const { newReview } = req.body;
-		const isReviewSaved = await createNewReviewForACamp(newReview, id);
-		if (isReviewSaved) {
-			res.redirect(`/campgrounds/${id}`);
-		}
-	} catch (err) {
 		if (!err.message) {
-			err.message = "Something went wrong... please try again later";
+			err.message = "Editing the campground has failed... please check your input or try again later";
+			err.status = 401;
+			err.refer = `/campgrounds/${id}`;
+		} else {
 			err.status = 500;
 			err.refer = `/campgrounds/${id}`;
 		}
 		next(err);
 	}
-});
-
-// delete a review
-router.delete("/:id/review/:review_id/delete", async (req, res, next) => {
-	const { id, review_id } = req.params;
-	await Review.findByIdAndDelete(review_id);
-	await Campground.findByIdAndUpdate(id, { $pull: { reviews: review_id } });
-	res.redirect(`/campgrounds/${id}`);
 });
 
 module.exports.router = router;

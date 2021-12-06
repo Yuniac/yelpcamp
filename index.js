@@ -8,7 +8,8 @@ mongoose.connect("mongodb://localhost:27017/yelp-camp");
 
 const ejsMate = require("ejs-mate");
 
-const { router: websiteRouter } = require("./router/website");
+const { router: campgroundsWebsiteRouter } = require("./router/campgrounds");
+const { router: reviewsWebsiteRouter } = require("./router/reviews");
 
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -22,7 +23,9 @@ app.use(methodOverride("_method"));
 app.get("/", (req, res) => {
 	res.render("home");
 });
-app.use("/campgrounds", websiteRouter);
+
+app.use("/campgrounds", campgroundsWebsiteRouter);
+app.use("/campgrounds", reviewsWebsiteRouter);
 
 app.all("*", (req, res) => {
 	res.status(404).render("campgrounds/error", {

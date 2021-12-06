@@ -1,4 +1,4 @@
-const { Campground } = require("../model/schema");
+const { Campground } = require("../model/campgroundsSchema");
 const { Review } = require("../model/ReviewsSchema");
 
 const getAll = async () => {
